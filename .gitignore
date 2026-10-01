@@ -1,3 +1,6 @@
-
+data/raw/*.csv
 data/duckdb/*.duckdb
-data/raw/**/*.csv
+.venv/
+__pycache__/
+*.pyc
+.env
