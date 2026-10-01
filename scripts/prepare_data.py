@@ -24,7 +24,7 @@ def main():
     con.execute("CREATE INDEX idx_tx_sender ON transactions(Sender_Account)")
     con.execute("CREATE INDEX idx_tx_receiver ON transactions(Receiver_Account)")
     con.execute("CREATE INDEX idx_tx_id ON transactions(Transaction_ID)")
-    con.execute('''CREATE TABLE accounts AS
+    con.execute('''CREATE TABLE accounts AS 
       WITH a AS (SELECT Sender_Account account_id, min(Timestamp) first_seen, max(Timestamp) last_seen, 0.0 total_in, sum(Amount) total_out, 0 in_degree, count(*) out_degree FROM transactions GROUP BY 1),
       b AS (SELECT Receiver_Account account_id, min(Timestamp) first_seen, max(Timestamp) last_seen, sum(Amount) total_in, 0.0 total_out, count(*) in_degree, 0 out_degree FROM transactions GROUP BY 1),
       u AS (SELECT account_id, min(first_seen) first_seen, max(last_seen) last_seen, sum(total_in) total_in, sum(total_out) total_out, sum(in_degree) in_degree, sum(out_degree) out_degree FROM (SELECT * FROM a UNION ALL SELECT * FROM b) GROUP BY 1)
@@ -35,6 +35,7 @@ def main():
        CAST(0.0 AS DOUBLE) AS velocity_ratio,
        CAST(0.0 AS DOUBLE) AS terminal_score
 FROM u
+  ''')
 
     # Cheap deterministic terminal aggregates.
   
